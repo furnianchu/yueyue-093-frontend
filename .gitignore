@@ -1,0 +1,13 @@
+node_modules/
+.next/
+.open-next/
+.wrangler/
+.vercel/
+.env.local
+.env*.local
+*.log
+*.mp4
+*.mov
+*.webm
+*.mkv
+.DS_Store
