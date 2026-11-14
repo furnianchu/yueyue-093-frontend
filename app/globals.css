@@ -126,3 +126,27 @@ body[data-stage="day"] .scanlines{opacity:.3}
   .pv-layer{gap:8px}
 }
 @media (prefers-reduced-motion:reduce) { .scanlines::after{animation:none} .card{transition:none} }
+
+/* ===== PV 真·字符画（64×20 / 10 级色阶）覆盖段 =====
+   由 pv2ascii.js 离线转出的 .asc 使用 0..9 共 10 档灰阶；
+   原 4 档在此重定义为单调 10 档，tint 一变整屏跟着变。 */
+.ascii-screen{
+  font-size:clamp(8px,1.5vw,13px);
+  line-height:1.05;
+  padding:12px 12px;
+}
+.shade-0 { color:var(--c0); opacity:.5; }
+.shade-1 { color:color-mix(in srgb,var(--c0) 58%,var(--c1)); }
+.shade-2 { color:color-mix(in srgb,var(--c0) 20%,var(--c1)); }
+.shade-3 { color:var(--c1); }
+.shade-4 { color:color-mix(in srgb,var(--c1) 62%,var(--c2)); }
+.shade-5 { color:color-mix(in srgb,var(--c1) 22%,var(--c2)); }
+.shade-6 { color:var(--c2); }
+.shade-7 { color:color-mix(in srgb,var(--c2) 70%,var(--c3)); }
+.shade-8 { color:color-mix(in srgb,var(--c2) 32%,var(--c3)); }
+.shade-9 { color:var(--c3); text-shadow:0 0 10px var(--aglow),0 0 22px var(--aglow); }
+@media (max-width:600px) {
+  .ascii-screen{ font-size:clamp(5.5px,1.75vw,9px); line-height:1.04; padding:8px 6px; }
+  .ascii-head{ gap:8px; }
+  .ascii-theme-name{ min-width:8em; }
+}
