@@ -5,6 +5,7 @@ import { API_ORIGIN } from '@/lib/config';
 import HeirGrid from './HeirGrid';
 import Terminal from './Terminal';
 import PVPlayer, { type PVHandle } from './PVPlayer';
+import AmphoreusBackdrop from './AmphoreusBackdrop';
 
 type Phase = 'grid' | 'terminal' | 'pv';
 const SPEEDS = [1, 2, 4];
@@ -46,7 +47,7 @@ export default function Experience() {
   return (
     <>
       <div className="scanlines" aria-hidden="true" />
-      <div className="backdrop" aria-hidden="true" />
+      <AmphoreusBackdrop />
       {phase === 'grid' ? (
         <HeirGrid heirs={HEIRS} onPick={pick} />
       ) : (

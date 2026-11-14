@@ -150,3 +150,86 @@ body[data-stage="day"] .scanlines{opacity:.3}
   .ascii-head{ gap:8px; }
   .ascii-theme-name{ min-width:8em; }
 }
+
+/* ============================================================
+   翁法罗斯背景 —— 双纽线 ∞ 字符画 + 轮回轨道 + 跳出代码语段
+   层级：z-index 0（在 .grid-wrap/.term-wrap 之下，.scanlines/.pv-layer 之下）
+   只加样式，不改任何现有规则；.backdrop 旧定义保留以兼容回滚。
+   ============================================================ */
+:root { --amph-gold:#dbc291; --amph-gold-dim:#8c7346; }
+
+.amph-backdrop {
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+  background:
+    radial-gradient(46vw 46vw at 50% 48%, #dbc29112, transparent 72%),
+    radial-gradient(60vw 40vh at 14% 8%,  #dbc29109, transparent 70%),
+    radial-gradient(56vw 42vh at 88% 92%, #c9a35a08, transparent 70%),
+    #08070a;
+  transition:opacity 1.4s ease;
+}
+
+/* 缓慢自转的轮回轨道，极淡，只给一点"星球"体积感 */
+.amph-orbit {
+  position:absolute; left:50%; top:50%; width:min(78vw,78vh); height:min(78vw,78vh);
+  border:1px dashed #dbc29114; border-radius:50%;
+  box-shadow:0 0 0 12vmin #dbc29105 inset;
+  animation:amph-spin 120s linear infinite;
+}
+.amph-orbit::after {
+  content:''; position:absolute; inset:9%;
+  border:1px solid #dbc2910b; border-radius:50%;
+}
+@keyframes amph-spin {
+  from { transform:translate(-50%,-50%) rotate(0deg); }
+  to   { transform:translate(-50%,-50%) rotate(360deg); }
+}
+
+/* 双纽线 ∞ 主环：金色，低对比，缓慢呼吸，绝不抢卡片 */
+.amph-infinity {
+  position:absolute; left:50%; top:50%; margin:0;
+  transform:translate(-50%,-50%);
+  font-family:var(--mono); font-size:clamp(5px,1.18vw,12px);
+  line-height:1.06; letter-spacing:0; white-space:pre;
+  color:var(--amph-gold);
+  text-shadow:0 0 14px #dbc29155;
+  user-select:none;
+  animation:amph-breathe 9s ease-in-out infinite;
+}
+@keyframes amph-breathe {
+  0%,100% { opacity:.15; text-shadow:0 0 10px #dbc29133; }
+  50%     { opacity:.31; text-shadow:0 0 22px #dbc29188; }
+}
+
+/* 跳出的代码语段：逐条错峰淡入，同一时刻最多 2~3 条在场 */
+.amph-codes { position:absolute; inset:0; }
+.amph-code {
+  position:absolute; display:inline-block; white-space:nowrap;
+  font-family:var(--mono); font-size:clamp(9px,1.05vw,12px);
+  letter-spacing:.04em; color:var(--amph-gold);
+  padding:3px 8px; border-left:1px solid #dbc29155;
+  background:linear-gradient(90deg,#dbc2910c,transparent);
+  text-shadow:0 0 10px #dbc29144;
+  opacity:0;
+  animation:amph-pop 15s ease-in-out infinite;
+}
+.amph-code::before { content:'› '; color:#f0009388; }
+@keyframes amph-pop {
+  0%, 64%, 100% { opacity:0; transform:translateY(7px) scale(.97); }
+  6%            { opacity:.72; transform:translateY(-4px) scale(1.02); }
+  12%, 50%      { opacity:.46; transform:translateY(0) scale(1); }
+  58%           { opacity:.12; transform:translateY(-2px) scale(.99); }
+}
+
+/* 切白阶段压低金色，避免白底刺眼；PV 层自带不透明底会自然盖住 */
+body[data-stage="day"] .amph-backdrop { opacity:.3; }
+
+@media (max-width:600px) {
+  .amph-infinity { font-size:clamp(4.5px,1.7vw,8px); line-height:1.04; }
+  .amph-code     { font-size:9px; padding:2px 5px; }
+  .amph-orbit    { width:92vw; height:92vw; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .amph-orbit { animation:none; }
+  .amph-infinity { animation:none; opacity:.2; }
+  .amph-code { animation:none; opacity:.28; }
+}
