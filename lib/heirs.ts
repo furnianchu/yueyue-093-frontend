@@ -38,7 +38,7 @@ export const HEIRS: Heir[] = [
     "city": "哀丽秘榭",
     "color": "#496",
     "swatch": "--NeiKos496",
-    "pv": "NeiKos496.mp4",
+    "pv": "NeiKos496.asc",
     "tagline": "容纳「负世」火种的黄金裔，为新世界带来第一缕曙光",
     "flavor": [
       "496 = 2^4 x (2^5 - 1) :: a perfect number. A perfect heir.",
@@ -343,7 +343,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: NeiKos496.mp4"
+            "text": "RENDER_SIGNAL :: NeiKos496.asc"
           }
         ],
         "pause": 700
@@ -364,7 +364,7 @@ export const HEIRS: Heir[] = [
     "city": "哀丽秘榭",
     "color": "#093",
     "swatch": "--PhiLia093",
-    "pv": "PhiLia093.mp4",
+    "pv": "PhiLia093.asc",
     "tagline": "往昔的涟漪，闪烁十三种光彩",
     "flavor": [
       "Rotate 093 by 180° >> EGO. The true self she believed in.",
@@ -669,7 +669,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: PhiLia093.mp4"
+            "text": "RENDER_SIGNAL :: PhiLia093.asc"
           }
         ],
         "pause": 700
@@ -690,7 +690,7 @@ export const HEIRS: Heir[] = [
     "city": "多洛斯",
     "color": "#945",
     "swatch": "--OreXis945",
-    "pv": "OreXis945.mp4",
+    "pv": "OreXis945.asc",
     "tagline": "捷足的贼星赛法利娅，戏弄「诡计」火种",
     "flavor": [
       "三百侠盗，纵横多洛斯；愿谎言随风同行。",
@@ -995,7 +995,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: OreXis945.mp4"
+            "text": "RENDER_SIGNAL :: OreXis945.asc"
           }
         ],
         "pause": 700
@@ -1016,7 +1016,7 @@ export const HEIRS: Heir[] = [
     "city": "神悟树庭",
     "color": "#720",
     "swatch": "--SkeMma720",
-    "pv": "SkeMma720.mp4",
+    "pv": "SkeMma720.asc",
     "tagline": "渎神的阿那克萨戈拉斯，诘问「理性」火种",
     "flavor": [
       "将怀疑的枝杈刺入智慧的圣树。",
@@ -1321,7 +1321,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: SkeMma720.mp4"
+            "text": "RENDER_SIGNAL :: SkeMma720.asc"
           }
         ],
         "pause": 700
@@ -1342,7 +1342,7 @@ export const HEIRS: Heir[] = [
     "city": "哀地里亚",
     "color": "#216",
     "swatch": "--EpieiKeia216",
-    "pv": "EpieiKeia216.mp4",
+    "pv": "EpieiKeia216.asc",
     "tagline": "冥河的女儿，寻索「死亡」火种",
     "flavor": [
       "启程吧，呵护世间魂灵的恸哭，拥抱命运的孤独。",
@@ -1647,7 +1647,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: EpieiKeia216.mp4"
+            "text": "RENDER_SIGNAL :: EpieiKeia216.asc"
           }
         ],
         "pause": 700
@@ -1668,7 +1668,7 @@ export const HEIRS: Heir[] = [
     "city": "悬锋城",
     "color": "#600",
     "swatch": "--PoleMos600",
-    "pv": "PoleMos600.mp4",
+    "pv": "PoleMos600.asc",
     "tagline": "不死的迈德漠斯，离群的狮子",
     "flavor": [
       "弑王成王，弑神登神；征战的铁蹄终将沾上故乡的血。",
@@ -1973,7 +1973,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: PoleMos600.mp4"
+            "text": "RENDER_SIGNAL :: PoleMos600.asc"
           }
         ],
         "pause": 700
@@ -1994,7 +1994,7 @@ export const HEIRS: Heir[] = [
     "city": "奥赫玛",
     "color": "#618",
     "swatch": "--KaLos618",
-    "pv": "KaLos618.mp4",
+    "pv": "KaLos618.asc",
     "tagline": "「金织」，背负「浪漫」火种的黄金裔",
     "flavor": [
       "召集世间英雄，再度踏上漫长的征程。",
@@ -2299,7 +2299,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: KaLos618.mp4"
+            "text": "RENDER_SIGNAL :: KaLos618.asc"
           }
         ],
         "pause": 700
@@ -2320,7 +2320,7 @@ export const HEIRS: Heir[] = [
     "city": "雅努萨波利斯",
     "color": "#405",
     "swatch": "--HapLotes405",
-    "pv": "HapLotes405.mp4",
+    "pv": "HapLotes405.asc",
     "tagline": "命运的三子，窃夺「门径」火种",
     "flavor": [
       "自那三相神谕垂怜的圣地，信使分作千身，启程远行。",
@@ -2625,7 +2625,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: HapLotes405.mp4"
+            "text": "RENDER_SIGNAL :: HapLotes405.asc"
           }
         ],
         "pause": 700
@@ -2646,7 +2646,7 @@ export const HEIRS: Heir[] = [
     "city": "昏光庭院",
     "color": "#252",
     "swatch": "--EleOs252",
-    "pv": "EleOs252.mp4",
+    "pv": "EleOs252.asc",
     "tagline": "医师雅辛忒丝，守望「天空」火种",
     "flavor": [
       "缝补破裂的晨昏，愿虹光洒落，黎明重回大地。",
@@ -2951,7 +2951,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: EleOs252.mp4"
+            "text": "RENDER_SIGNAL :: EleOs252.asc"
           }
         ],
         "pause": 700
@@ -2972,7 +2972,7 @@ export const HEIRS: Heir[] = [
     "city": "奥赫玛",
     "color": "#504",
     "swatch": "--HubRis504",
-    "pv": "HubRis504.mp4",
+    "pv": "HubRis504.asc",
     "tagline": "执棋的君主，执握「律法」火种",
     "flavor": [
       "布局设子，与神相弈，审判异心的罪囚。",
@@ -3277,7 +3277,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: HubRis504.mp4"
+            "text": "RENDER_SIGNAL :: HubRis504.asc"
           }
         ],
         "pause": 700
@@ -3298,7 +3298,7 @@ export const HEIRS: Heir[] = [
     "city": "斯缇科西亚",
     "color": "#432",
     "swatch": "--ApoRia432",
-    "pv": "ApoRia432.mp4",
+    "pv": "ApoRia432.asc",
     "tagline": "大海的女儿海列屈拉，清洗「海洋」火种",
     "flavor": [
       "为天外的英雄奏响不醉不归的盛宴。",
@@ -3603,7 +3603,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: ApoRia432.mp4"
+            "text": "RENDER_SIGNAL :: ApoRia432.asc"
           }
         ],
         "pause": 700
@@ -3624,7 +3624,7 @@ export const HEIRS: Heir[] = [
     "city": "天外",
     "color": "#456c79",
     "swatch": "--■■■",
-    "pv": "Evernight.mp4",
+    "pv": "Evernight.asc",
     "tagline": "隐匿「岁月」火种的黄金裔，掀起「忘却」的浪潮",
     "flavor": [
       "自那影中而来的记忆之子，守护镜中人的心愿。",
@@ -3929,7 +3929,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: Evernight.mp4"
+            "text": "RENDER_SIGNAL :: Evernight.asc"
           }
         ],
         "pause": 700
@@ -3950,7 +3950,7 @@ export const HEIRS: Heir[] = [
     "city": "天外",
     "color": "#365",
     "swatch": "--SkoPeo365",
-    "pv": "DanHengPT.mp4",
+    "pv": "DanHengPT.asc",
     "tagline": "捍卫「大地」火种，扶八荒之将倾",
     "flavor": [
       "吉奥里亚的胸膛，伏龙的身躯支撑破碎的大地。",
@@ -4255,7 +4255,7 @@ export const HEIRS: Heir[] = [
           },
           {
             "t": "signal",
-            "text": "PLAY_PV :: DanHengPT.mp4"
+            "text": "RENDER_SIGNAL :: DanHengPT.asc"
           }
         ],
         "pause": 700

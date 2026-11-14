@@ -28,5 +28,4 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           NEXT_PUBLIC_API_ORIGIN: https://yueyuezidaidaixue.ccwu.cc
-          NEXT_PUBLIC_PV_BASE: https://yueyuezidaidaixue.ccwu.cc/pv
         run: npm run deploy

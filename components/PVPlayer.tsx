@@ -1,86 +1,166 @@
 'use client';
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import type { Heir } from '@/lib/heirs';
-import { pvUrl } from '@/lib/config';
+import {
+  buildFrames, captionOf, frameCount, frameFps,
+  THEMES, THEME_FOR_HEIR, type Frame,
+} from '@/lib/asciiFrames';
 
+/** 接口故意与原视频版完全一致 —— Experience.tsx 一行都不用改 */
 export type PVHandle = {
-  /** 必须在用户点击的同一个同步调用里执行，用来「解锁」移动端静音播放 */
   warmup: (h: Heir) => void;
-  /** 终端跑完后：尝试带声音播放，失败则静音播放 + 显示取消静音按钮 */
   start: () => void;
 };
 
 type Props = { visible: boolean; heir: Heir | null };
 
+const SPEEDS = [1, 2, 4];
+
+/** 把一行按连续色阶合并成若干 span，13×14 网格下 DOM 很轻 */
+function Row({ line, shades }: { line: string; shades: number[] }) {
+  const parts: { s: number; text: string }[] = [];
+  for (let i = 0; i < line.length; i++) {
+    const s = shades[i] ?? 0;
+    const last = parts[parts.length - 1];
+    if (last && last.s === s) last.text += line[i];
+    else parts.push({ s, text: line[i] });
+  }
+  return (
+    <span className="ascii-row">
+      {parts.map((p, i) => <span key={i} className={`shade-${p.s}`}>{p.text}</span>)}
+      {'\n'}
+    </span>
+  );
+}
+
 const PVPlayer = forwardRef<PVHandle, Props>(function PVPlayer({ visible, heir }, ref) {
-  const v = useRef<HTMLVideoElement>(null);
-  const [needUnmute, setNeedUnmute] = useState(false);
-  const [blocked, setBlocked] = useState(false);
-  const [missing, setMissing] = useState(false);
+  const [id, setId] = useState('PhiLia093');
+  const [frames, setFrames] = useState<Frame[]>(() => buildFrames('PhiLia093'));
+  const [frameNo, setFrameNo] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
+  const [themeIdx, setThemeIdx] = useState(0);
+  const [reduced, setReduced] = useState(false);
+
+  const frameRef = useRef(0);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stop = useCallback(() => {
+    if (timer.current) { clearInterval(timer.current); timer.current = null; }
+  }, []);
+
+  const tick = useCallback((n: number, sp: number, fps: number) => {
+    stop();
+    const ms = Math.max(40, Math.round(1000 / (fps * sp)));
+    timer.current = setInterval(() => {
+      frameRef.current = (frameRef.current + 1) % n;
+      setFrameNo(frameRef.current);
+    }, ms);
+  }, [stop]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => setReduced(mq.matches);
+    apply();
+    mq.addEventListener?.('change', apply);
+    return () => { mq.removeEventListener?.('change', apply); stop(); };
+  }, [stop]);
 
   useImperativeHandle(ref, () => ({
     warmup(h) {
-      const el = v.current; if (!el) return;
-      setNeedUnmute(false); setBlocked(false); setMissing(false);
-      el.muted = true;
-      el.playsInline = true;   // iPhone 缺这个会强制全屏
-      el.preload = 'auto';
-      el.src = pvUrl(h.pv);
-      el.load();
-      const p = el.play();     // 手势内的静音 play，iOS 只允许这一种
-      if (p && typeof p.then === 'function') {
-        p.then(() => { el.pause(); el.currentTime = 0; }).catch(() => {});
-      }
+      // 与点击同一个同步栈：预生成帧，避免切白后第一帧卡顿
+      const nextId = h.id in THEME_FOR_HEIR ? h.id : 'PhiLia093';
+      setId(nextId);
+      setFrames(buildFrames(nextId));
+      frameRef.current = 0;
+      setFrameNo(0);
+      setPlaying(false);
+      setSpeed(1);
+      setThemeIdx(THEME_FOR_HEIR[nextId] ?? 0);
+      stop();
     },
-    async start() {
-      const el = v.current; if (!el) return;
-      if (el.error) { setMissing(true); return; }   // 文件没放好就不要误弹播放按钮
-      el.currentTime = 0;
-      el.muted = false;
-      try {
-        await el.play();
-      } catch {
-        el.muted = true;
-        try { await el.play(); setNeedUnmute(true); }
-        catch { setBlocked(true); }   // iOS 低电量模式会走到这里，代码绕不过
-      }
+    start() {
+      if (reduced) { setPlaying(false); return; }   // 无障碍：定格第一帧
+      setPlaying(true);
+      tick(frameCount(id), 1, frameFps(id));
     },
-  }), []);
+  }), [id, reduced, stop, tick]);
 
-  const unmute = () => {
-    const el = v.current; if (!el) return;
-    el.muted = false;
-    setNeedUnmute(false);
-    el.play().catch(() => setBlocked(true));
+  const togglePlay = () => {
+    if (reduced) return;
+    if (playing) { stop(); setPlaying(false); }
+    else { setPlaying(true); tick(frameCount(id), speed, frameFps(id)); }
   };
 
+  const cycleSpeed = () => {
+    const next = SPEEDS[(SPEEDS.indexOf(speed) + 1) % SPEEDS.length];
+    setSpeed(next);
+    if (playing) tick(frameCount(id), next, frameFps(id));
+  };
+
+  const cycleTheme = (dir = 1) => {
+    setThemeIdx(i => (i + dir + THEMES.length) % THEMES.length);
+  };
+
+  const theme = THEMES[themeIdx] ?? THEMES[0];
+  const frame = frames[frameNo] ?? frames[0];
+  const total = frameCount(id);
+  const cssVars = {
+    '--c0': theme.c0, '--c1': theme.c1, '--c2': theme.c2,
+    '--c3': theme.c3, '--aglow': theme.glow,
+  } as CSSProperties;
+
   return (
-    <div className={'pv-layer' + (visible ? ' show' : '')} aria-hidden={!visible}>
-      {heir && <p className="pv-label" style={{ color: heir.color }}>{heir.signal} :: {heir.name}</p>}
-      <video
-        ref={v}
-        className="pv-video"
-        playsInline
-        muted
-        preload="auto"
-        controls={visible}
-        onError={() => setMissing(true)}
-        onEnded={() => setNeedUnmute(false)}
-      />
-      {missing && visible && (
-        <div className="pv-fallback">
-          <p>▌ PV 文件未找到</p>
-          <p className="mono">{heir ? pvUrl(heir.pv) : ''}</p>
-          <p>把对应 mp4 放到该路径，或配置 NEXT_PUBLIC_PV_BASE 指向 R2。</p>
-        </div>
-      )}
-      {blocked && visible && !missing && (
-        <button className="pv-btn" onClick={() => { const el = v.current!; el.muted = false; el.play(); setBlocked(false); }}>
-          ▶ 点击播放（若仍无声请关闭低电量模式）
+    <div
+      className={'pv-layer ascii-layer' + (visible ? ' show' : '')}
+      aria-hidden={!visible}
+      style={cssVars}
+    >
+      <div className="ascii-head">
+        <p className="pv-label" style={{ color: heir?.color || theme.c2 }}>
+          {heir?.signal} :: {heir?.name}
+        </p>
+        <span className="ascii-frame">
+          FRAME {String(frameNo + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}
+        </span>
+      </div>
+
+      <pre className="ascii-screen" aria-label={`${heir?.name ?? '角色'} 的 ASCII 逐帧动画`}>
+        {frame && frame.lines.map((line, y) => (
+          <Row key={y} line={line} shades={frame.shades[y]} />
+        ))}
+      </pre>
+
+      <p className="ascii-caption">{captionOf(id)}</p>
+
+      {/* 颜色控制器 */}
+      <div className="ascii-themes" role="group" aria-label="配色主题切换">
+        <button className="pv-btn" onClick={() => cycleTheme(-1)} aria-label="上一个配色">◀</button>
+        <span className="ascii-theme-name" style={{ color: theme.c2 }}>{theme.label}</span>
+        <button className="pv-btn" onClick={() => cycleTheme(1)} aria-label="下一个配色">▶</button>
+        <span className="ascii-swatches" aria-hidden="true">
+          {THEMES.map((t, i) => (
+            <button
+              key={t.id}
+              className={'ascii-dot' + (i === themeIdx ? ' on' : '')}
+              style={{ background: t.c2 }}
+              onClick={() => setThemeIdx(i)}
+              aria-label={t.label}
+            />
+          ))}
+        </span>
+      </div>
+
+      <div className="ascii-controls">
+        <button className="pv-btn" onClick={togglePlay} disabled={reduced}>
+          {reduced ? '▌ 已按系统设置定格' : playing ? '❚❚ 暂停' : '▶ 播放'}
         </button>
-      )}
-      {needUnmute && visible && !missing && <button className="pv-btn" onClick={unmute}>🔊 取消静音</button>}
-      {visible && <button className="pv-back" onClick={() => window.location.reload()}>← 返回选择</button>}
+        <button className="pv-btn" onClick={cycleSpeed}>{speed}×</button>
+        <button className="pv-btn" onClick={() => { frameRef.current = 0; setFrameNo(0); }}>↺ 回到首帧</button>
+        <button className="pv-btn" onClick={() => window.location.reload()}>← 返回选择</button>
+      </div>
     </div>
   );
 });

@@ -80,15 +80,49 @@ body[data-stage="day"] .t-ok{color:#147a4b} body[data-stage="day"] .t-alert{colo
 body[data-stage="day"] .t-info{color:#2566a8} body[data-stage="day"] .t-comment{color:#6b7a80}
 body[data-stage="day"] .scanlines{opacity:.3}
 
-/* 关键：常驻渲染树且位于视口内，只是透明。display:none 会让 iOS 拒绝预热 play() */
+/* ---- 常驻渲染树，只是透明。切白后由 JS 逐帧替换 <pre> 里的字符 ---- */
 .pv-layer { position:fixed; inset:0; z-index:60; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:12px; background:#080608; padding:4vh 3vw;
-  opacity:0; pointer-events:none; transition:opacity .6s ease; }
+  align-items:center; justify-content:center; gap:10px; padding:3vh 3vw;
+  background:radial-gradient(60vw 60vh at 50% 45%,color-mix(in srgb,var(--c1) 16%,#080608),#080608 78%);
+  opacity:0; pointer-events:none; transition:opacity .6s ease,background .4s ease; }
 .pv-layer.show { opacity:1; pointer-events:auto; }
 .pv-label { margin:0; font-size:.85em; letter-spacing:.1em; text-shadow:0 0 12px currentColor; }
-.pv-video { width:100%; max-width:1000px; max-height:78vh; background:#000; border:1px solid #f0009355; }
-.pv-fallback { color:#c9b9c3; text-align:center; font-size:.85em; line-height:2; }
-.pv-fallback .mono { color:#f00093; word-break:break-all; }
+
+.ascii-head { display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; justify-content:center; }
+.ascii-frame { font-size:.7em; letter-spacing:.12em; color:var(--c1); }
+.ascii-screen {
+  margin:0; padding:14px 16px; font-family:var(--mono);
+  font-size:clamp(10px,3.4vw,20px); line-height:1.16; letter-spacing:0;
+  white-space:pre; overflow:hidden; max-width:100%;
+  background:#05040699; border:1px solid color-mix(in srgb,var(--c2) 45%,transparent);
+  box-shadow:0 0 0 1px #000,0 0 34px color-mix(in srgb,var(--aglow) 26%,transparent) inset,
+             0 0 28px color-mix(in srgb,var(--aglow) 16%,transparent);
+  text-shadow:0 0 8px color-mix(in srgb,var(--aglow) 55%,transparent);
+  user-select:none;
+}
+.ascii-row { display:inline; }
+.shade-0 { color:var(--c0); opacity:.55; }
+.shade-1 { color:var(--c1); }
+.shade-2 { color:var(--c2); }
+.shade-3 { color:var(--c3); text-shadow:0 0 10px var(--aglow),0 0 20px var(--aglow); }
+.ascii-caption { margin:0; font-size:.74em; letter-spacing:.1em; color:var(--c1); text-align:center; }
+
+/* 颜色控制器 */
+.ascii-themes { display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center; max-width:100%; }
+.ascii-theme-name { font-size:.72em; letter-spacing:.08em; min-width:11em; text-align:center; }
+.ascii-swatches { display:flex; gap:5px; max-width:min(74vw,420px); overflow-x:auto; padding:3px 0; }
+.ascii-dot { width:13px; height:13px; flex:0 0 13px; padding:0; border:1px solid #0008;
+  border-radius:50%; cursor:pointer; opacity:.45; transition:transform .15s,opacity .15s; }
+.ascii-dot:hover { opacity:.85; }
+.ascii-dot.on { opacity:1; transform:scale(1.35); box-shadow:0 0 0 1px #fff6,0 0 9px currentColor; }
+.ascii-controls { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
 .pv-btn,.pv-back { align-self:center; }
-@media (max-width:600px) { .grid-wrap{padding:6vh 4vw 9vh} .terminal{padding:4vh 4vw 8vh} }
+.pv-btn:disabled { opacity:.4; cursor:default; }
+
+@media (max-width:600px) {
+  .grid-wrap{padding:6vh 4vw 9vh} .terminal{padding:4vh 4vw 8vh}
+  .ascii-screen{font-size:clamp(9px,3.1vw,13px);padding:10px 8px}
+  .ascii-theme-name{min-width:9em}
+  .pv-layer{gap:8px}
+}
 @media (prefers-reduced-motion:reduce) { .scanlines::after{animation:none} .card{transition:none} }

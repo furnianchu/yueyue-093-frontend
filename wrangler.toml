@@ -9,7 +9,6 @@ binding = "ASSETS"
 
 [vars]
 NEXT_PUBLIC_API_ORIGIN = "https://yueyuezidaidaixue.ccwu.cc"
-NEXT_PUBLIC_PV_BASE = "https://yueyuezidaidaixue.ccwu.cc/pv"
 
 [observability]
 enabled = true
